@@ -1,4 +1,5 @@
 using System.Globalization;
+using System.Text;
 
 namespace pryLencinaProyectoLaboratorio1
 {
@@ -33,6 +34,8 @@ namespace pryLencinaProyectoLaboratorio1
             public decimal ValorCuota;
         }
 
+        private List<SOCIO> registroSocios = new List<SOCIO>();
+
         public Form1()
         {
             InitializeComponent();
@@ -41,6 +44,7 @@ namespace pryLencinaProyectoLaboratorio1
         private void Form1_Load(object? sender, EventArgs e)
         {
             EstadoInicial();
+            CargarDatosEnGrid();
         }
 
         private void EstadoInicial()
@@ -62,6 +66,16 @@ namespace pryLencinaProyectoLaboratorio1
         private void btnLimpiar_Click(object? sender, EventArgs e)
         {
             EstadoInicial();
+        }
+
+        private void btnHistorial_Click(object? sender, EventArgs e)
+        {
+            MostrarHistorial();
+        }
+
+        private void btnGuardar_Click(object? sender, EventArgs e)
+        {
+            GuardarRegistros();
         }
 
         private void SoloNumeros_KeyPress(object? sender, KeyPressEventArgs e)
@@ -236,6 +250,9 @@ namespace pryLencinaProyectoLaboratorio1
                 ValorCuota = valorCuota
             };
 
+            registroSocios.Add(socio);
+            CargarDatosEnGrid();
+
             string mensaje = $"Nombre: {socio.Nombre}\n"
                 + $"Edad: {socio.Edad} años ({socio.Categoria})\n"
                 + $"Plan: {socio.Plan}\n"
@@ -243,7 +260,8 @@ namespace pryLencinaProyectoLaboratorio1
                 + $"Meses: {socio.Meses}\n"
                 + $"Forma de pago: {socio.FormaPago}\n"
                 + $"Total: {FormatearMoneda(socio.Total)}\n"
-                + $"Valor de cuota: {FormatearMoneda(socio.ValorCuota)}";
+                + $"Valor de cuota: {FormatearMoneda(socio.ValorCuota)}\n\n"
+                + $"✓ Inscripción guardada (Total registros: {registroSocios.Count})";
 
             MessageBox.Show(mensaje, "Resumen de inscripción", MessageBoxButtons.OK, MessageBoxIcon.Information);
             EstadoInicial();
@@ -252,6 +270,110 @@ namespace pryLencinaProyectoLaboratorio1
         private static string FormatearMoneda(decimal importe)
         {
             return importe.ToString("C2", CultureInfo.GetCultureInfo("es-AR"));
+        }
+
+        private void GuardarRegistros()
+        {
+            if (registroSocios.Count == 0)
+            {
+                MessageBox.Show("No hay registros para guardar.", "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            try
+            {
+                string rutaArchivo = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), 
+                    $"Inscripciones_Gimnasio_{DateTime.Now:yyyy-MM-dd_HH-mm-ss}.csv");
+
+                using (StreamWriter writer = new StreamWriter(rutaArchivo, false, Encoding.UTF8))
+                {
+                    writer.WriteLine("Nombre,Edad,Categoría,Plan,Horario,Meses,Forma de Pago,Total,Valor Cuota");
+
+                    foreach (var socio in registroSocios)
+                    {
+                        string linea = $"\"{socio.Nombre}\",{socio.Edad},\"{socio.Categoria}\",\"{socio.Plan}\",\"{socio.Horario}\"," +
+                            $"{socio.Meses},\"{socio.FormaPago}\"," +
+                            $"{socio.Total.ToString("F2")},{socio.ValorCuota.ToString("F2")}";
+                        writer.WriteLine(linea);
+                    }
+                }
+
+                MessageBox.Show($"✓ {registroSocios.Count} registro(s) guardado(s) en:\n\n{rutaArchivo}", 
+                    "Archivo guardado", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al guardar: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void CargarDatosEnGrid()
+        {
+            dgvSocios.DataSource = null;
+
+            var bondingList = new BindingSource(registroSocios.Select(s => new
+            {
+                s.Nombre,
+                s.Edad,
+                s.Categoria,
+                s.Plan,
+                s.Horario,
+                s.Meses,
+                s.FormaPago,
+                Total = s.Total.ToString("C2"),
+                Cuota = s.ValorCuota.ToString("C2")
+            }).ToList(), null);
+
+            dgvSocios.DataSource = bondingList;
+
+            dgvSocios.Columns["Nombre"].Width = 100;
+            dgvSocios.Columns["Edad"].Width = 50;
+            dgvSocios.Columns["Categoria"].Width = 70;
+            dgvSocios.Columns["Plan"].Width = 80;
+            dgvSocios.Columns["Horario"].Width = 70;
+            dgvSocios.Columns["Meses"].Width = 50;
+            dgvSocios.Columns["FormaPago"].Width = 90;
+            dgvSocios.Columns["Total"].Width = 80;
+            dgvSocios.Columns["Cuota"].Width = 80;
+
+            foreach (DataGridViewColumn column in dgvSocios.Columns)
+            {
+                column.HeaderText = column.HeaderText.Replace("FormaPago", "Forma de Pago");
+                column.SortMode = DataGridViewColumnSortMode.NotSortable;
+            }
+        }
+
+        private void MostrarHistorial()
+        {
+            if (registroSocios.Count == 0)
+            {
+                MessageBox.Show("No hay registros guardados.", "Historial vacío", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine($"📊 HISTORIAL DE INSCRIPCIONES ({registroSocios.Count} socios)");
+            sb.AppendLine("═".PadRight(80, '═'));
+
+            decimal totalRecaudado = 0;
+
+            for (int i = 0; i < registroSocios.Count; i++)
+            {
+                var socio = registroSocios[i];
+                totalRecaudado += socio.Total;
+
+                sb.AppendLine($"\n{i + 1}. {socio.Nombre}");
+                sb.AppendLine($"   Edad: {socio.Edad} años ({socio.Categoria})");
+                sb.AppendLine($"   Plan: {socio.Plan} - Horario: {socio.Horario}");
+                sb.AppendLine($"   Meses: {socio.Meses} | Pago: {socio.FormaPago}");
+                sb.AppendLine($"   Total: {FormatearMoneda(socio.Total)} | Cuota: {FormatearMoneda(socio.ValorCuota)}");
+            }
+
+            sb.AppendLine("\n" + "═".PadRight(80, '═'));
+            sb.AppendLine($"💰 Total recaudado: {FormatearMoneda(totalRecaudado)}");
+            sb.AppendLine($"📈 Promedio por socio: {FormatearMoneda(totalRecaudado / registroSocios.Count)}");
+
+            MessageBox.Show(sb.ToString(), "Historial de Inscripciones", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
     }
 }

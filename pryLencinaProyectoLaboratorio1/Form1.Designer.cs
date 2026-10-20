@@ -3,7 +3,9 @@
     partial class Form1
     {
         private System.ComponentModel.IContainer components = null;
+        private Panel pnlEncabezado;
         private Label lblTitulo;
+        private Label lblSubtitulo;
         private Label lblNombre;
         private Label lblEdad;
         private Label lblPlan;
@@ -23,7 +25,12 @@
         private ComboBox cboCuotas;
         private Button btnCalcular;
         private Button btnLimpiar;
+        private Button btnHistorial;
+        private Button btnGuardar;
         private Label lblAyuda;
+        private DataGridView dgvSocios;
+        private Panel pnlSeparador;
+        private Label lblDatosCargados;
 
         protected override void Dispose(bool disposing)
         {
@@ -43,7 +50,9 @@
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
+            pnlEncabezado = new Panel();
             lblTitulo = new Label();
+            lblSubtitulo = new Label();
             lblNombre = new Label();
             lblEdad = new Label();
             lblPlan = new Label();
@@ -63,24 +72,43 @@
             cboCuotas = new ComboBox();
             btnCalcular = new Button();
             btnLimpiar = new Button();
+            btnHistorial = new Button();
+            btnGuardar = new Button();
             lblAyuda = new Label();
+            dgvSocios = new DataGridView();
+            pnlSeparador = new Panel();
+            lblDatosCargados = new Label();
+            pnlEncabezado.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)dgvSocios).BeginInit();
             grpPago.SuspendLayout();
             SuspendLayout();
 
+            pnlEncabezado.BackColor = Color.FromArgb(26, 59, 105);
+            pnlEncabezado.Location = new Point(0, 0);
+            pnlEncabezado.Size = new Size(1100, 80);
+            pnlEncabezado.Controls.Add(lblTitulo);
+            pnlEncabezado.Controls.Add(lblSubtitulo);
+
             lblTitulo.AutoSize = true;
-            lblTitulo.Font = new Font("Segoe UI", 20F, FontStyle.Bold);
-            lblTitulo.Location = new Point(28, 20);
-            lblTitulo.Text = "💪 Gimnasio Siglo - Inscripción";
-            lblTitulo.ForeColor = Color.FromArgb(31, 78, 121);
+            lblTitulo.Font = new Font("Segoe UI", 22F, FontStyle.Bold);
+            lblTitulo.Location = new Point(28, 15);
+            lblTitulo.Text = "💪 GIMNASIO SIGLO";
+            lblTitulo.ForeColor = Color.White;
+
+            lblSubtitulo.AutoSize = true;
+            lblSubtitulo.Font = new Font("Segoe UI", 11F, FontStyle.Italic);
+            lblSubtitulo.Location = new Point(28, 45);
+            lblSubtitulo.Text = "Sistema de Inscripción de Socios";
+            lblSubtitulo.ForeColor = Color.FromArgb(173, 216, 230);
 
             lblNombre.AutoSize = true;
             lblNombre.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
-            lblNombre.Location = new Point(32, 88);
+            lblNombre.Location = new Point(32, 108);
             lblNombre.Text = "👤";
             lblNombre.ForeColor = Color.FromArgb(45, 45, 48);
-            txtNombre.Location = new Point(70, 84);
+            txtNombre.Location = new Point(70, 104);
             txtNombre.MaxLength = 30;
-            txtNombre.Size = new Size(420, 24);
+            txtNombre.Size = new Size(300, 24);
             txtNombre.TabIndex = 0;
             txtNombre.CharacterCasing = CharacterCasing.Upper;
             txtNombre.Font = new Font("Segoe UI", 10F);
@@ -91,10 +119,10 @@
 
             lblEdad.AutoSize = true;
             lblEdad.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
-            lblEdad.Location = new Point(32, 130);
+            lblEdad.Location = new Point(32, 150);
             lblEdad.Text = "🎂";
             lblEdad.ForeColor = Color.FromArgb(45, 45, 48);
-            txtEdad.Location = new Point(70, 126);
+            txtEdad.Location = new Point(70, 146);
             txtEdad.MaxLength = 3;
             txtEdad.Size = new Size(100, 24);
             txtEdad.Font = new Font("Segoe UI", 10F);
@@ -106,7 +134,7 @@
             txtEdad.TextChanged += Datos_TextChanged;
 
             chkEstudiante.AutoSize = true;
-            chkEstudiante.Location = new Point(190, 128);
+            chkEstudiante.Location = new Point(190, 148);
             chkEstudiante.Text = "✓ Estudiante";
             chkEstudiante.Font = new Font("Segoe UI", 10F);
             chkEstudiante.ForeColor = Color.FromArgb(45, 45, 48);
@@ -223,48 +251,105 @@
             btnLimpiar.TabIndex = 9;
             btnLimpiar.Click += btnLimpiar_Click;
 
+            btnHistorial.Location = new Point(32, 580);
+            btnHistorial.Size = new Size(180, 35);
+            btnHistorial.Text = "📊 HISTORIAL";
+            btnHistorial.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            btnHistorial.BackColor = Color.FromArgb(34, 139, 34);
+            btnHistorial.ForeColor = Color.White;
+            btnHistorial.FlatStyle = FlatStyle.Flat;
+            btnHistorial.Cursor = Cursors.Hand;
+            btnHistorial.TabIndex = 10;
+            btnHistorial.Click += btnHistorial_Click;
+
+            btnGuardar.Location = new Point(230, 580);
+            btnGuardar.Size = new Size(180, 35);
+            btnGuardar.Text = "💾 GUARDAR CSV";
+            btnGuardar.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            btnGuardar.BackColor = Color.FromArgb(220, 20, 60);
+            btnGuardar.ForeColor = Color.White;
+            btnGuardar.FlatStyle = FlatStyle.Flat;
+            btnGuardar.Cursor = Cursors.Hand;
+            btnGuardar.TabIndex = 11;
+            btnGuardar.Click += btnGuardar_Click;
+
             lblAyuda.AutoSize = true;
             lblAyuda.ForeColor = Color.FromArgb(70, 130, 180);
             lblAyuda.Location = new Point(32, 310);
             lblAyuda.MaximumSize = new Size(500, 0);
-            lblAyuda.Font = new Font("Segoe UI", 9.5F, FontStyle.Italic);
-            lblAyuda.Text = "💡 Seleccioná estudiante si aplica\n📦 Agregá casillero si lo necesitás\n💳 Elegí forma de pago y cuotas";
+                        lblAyuda.Font = new Font("Segoe UI", 9.5F, FontStyle.Italic);
+                        lblAyuda.Text = "💡 Seleccioná estudiante si aplica\n📦 Agregá casillero si lo necesitás\n💳 Elegí forma de pago y cuotas";
 
-            AcceptButton = btnCalcular;
-            AutoScaleMode = AutoScaleMode.Font;
-            BackColor = Color.FromArgb(250, 250, 250);
-            ClientSize = new Size(800, 620);
-            Controls.Add(lblTitulo);
-            Controls.Add(lblNombre);
-            Controls.Add(txtNombre);
-            Controls.Add(lblEdad);
-            Controls.Add(txtEdad);
-            Controls.Add(chkEstudiante);
-            Controls.Add(lblPlan);
-            Controls.Add(cboPlan);
-            Controls.Add(lblTurno);
-            Controls.Add(cboTurno);
-            Controls.Add(lblMeses);
-            Controls.Add(txtMeses);
-            Controls.Add(chkCasillero);
-            Controls.Add(lblAyuda);
-            Controls.Add(grpPago);
-            Controls.Add(lblCuotas);
-            Controls.Add(cboCuotas);
-            Controls.Add(btnCalcular);
-            Controls.Add(btnLimpiar);
-            Font = new Font("Segoe UI", 9.5F);
-            FormBorderStyle = FormBorderStyle.FixedSingle;
-            MaximizeBox = false;
-            StartPosition = FormStartPosition.CenterScreen;
-            Text = "Gimnasio Siglo - Sistema de Inscripción";
-            Load += Form1_Load;
-            grpPago.ResumeLayout(false);
-            grpPago.PerformLayout();
-            ResumeLayout(false);
-            PerformLayout();
-        }
+                        pnlSeparador.BackColor = Color.FromArgb(200, 200, 200);
+                        pnlSeparador.Height = 2;
+                        pnlSeparador.Location = new Point(0, 375);
+                        pnlSeparador.Size = new Size(1100, 2);
 
-        #endregion
-    }
-}
+                        lblDatosCargados.AutoSize = true;
+                        lblDatosCargados.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
+                        lblDatosCargados.Location = new Point(550, 108);
+                        lblDatosCargados.Text = "📋 SOCIOS REGISTRADOS";
+                        lblDatosCargados.ForeColor = Color.FromArgb(26, 59, 105);
+
+                        dgvSocios.AllowUserToAddRows = false;
+                        dgvSocios.AllowUserToDeleteRows = false;
+                        dgvSocios.BackgroundColor = Color.White;
+                        dgvSocios.BorderStyle = BorderStyle.Fixed3D;
+                        dgvSocios.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+                        dgvSocios.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(26, 59, 105);
+                        dgvSocios.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
+                        dgvSocios.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+                        dgvSocios.Location = new Point(550, 140);
+                        dgvSocios.ReadOnly = true;
+                        dgvSocios.RowHeadersVisible = false;
+                        dgvSocios.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+                        dgvSocios.Size = new Size(520, 480);
+                        dgvSocios.TabIndex = 20;
+                        dgvSocios.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(240, 248, 255);
+
+                        AcceptButton = btnCalcular;
+                        AutoScaleMode = AutoScaleMode.Font;
+                        BackColor = Color.FromArgb(250, 250, 250);
+                        ClientSize = new Size(1100, 640);
+                        Controls.Add(pnlEncabezado);
+                        Controls.Add(lblDatosCargados);
+                        Controls.Add(dgvSocios);
+                        Controls.Add(pnlSeparador);
+                        Controls.Add(lblNombre);
+                        Controls.Add(txtNombre);
+                        Controls.Add(lblEdad);
+                        Controls.Add(txtEdad);
+                        Controls.Add(chkEstudiante);
+                        Controls.Add(lblPlan);
+                        Controls.Add(cboPlan);
+                        Controls.Add(lblTurno);
+                        Controls.Add(cboTurno);
+                        Controls.Add(lblMeses);
+                        Controls.Add(txtMeses);
+                        Controls.Add(chkCasillero);
+                        Controls.Add(lblAyuda);
+                        Controls.Add(grpPago);
+                        Controls.Add(lblCuotas);
+                        Controls.Add(cboCuotas);
+                        Controls.Add(btnCalcular);
+                        Controls.Add(btnLimpiar);
+                        Controls.Add(btnHistorial);
+                        Controls.Add(btnGuardar);
+                        Font = new Font("Segoe UI", 9.5F);
+                        FormBorderStyle = FormBorderStyle.FixedSingle;
+                        MaximizeBox = false;
+                        StartPosition = FormStartPosition.CenterScreen;
+                        Text = "Gimnasio Siglo - Sistema de Inscripción";
+                        Load += Form1_Load;
+                        pnlEncabezado.ResumeLayout(false);
+                        pnlEncabezado.PerformLayout();
+                        grpPago.ResumeLayout(false);
+                        grpPago.PerformLayout();
+                        ((System.ComponentModel.ISupportInitialize)dgvSocios).EndInit();
+                        ResumeLayout(false);
+                        PerformLayout();
+                    }
+
+                    #endregion
+                }
+            }
